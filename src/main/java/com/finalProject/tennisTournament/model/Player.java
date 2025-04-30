@@ -1,5 +1,6 @@
 package com.finalProject.tennisTournament.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,6 +19,7 @@ public class Player {
     private int losses;
 
     @ManyToMany(mappedBy = "players")
+    @JsonIgnore
     private Set<Tournament> tournaments = new HashSet<>();
 
     public Long getId() {
