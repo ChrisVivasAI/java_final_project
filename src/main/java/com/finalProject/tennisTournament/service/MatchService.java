@@ -1,5 +1,6 @@
 package com.finalProject.tennisTournament.service;
 
+import com.finalProject.tennisTournament.dto.MatchRequestDTO;
 import com.finalProject.tennisTournament.model.Match;
 import com.finalProject.tennisTournament.model.Player;
 import com.finalProject.tennisTournament.model.Tournament;
@@ -23,11 +24,11 @@ public class MatchService {
     @Autowired
     private TournamentRepository tournamentRepository;
 
-    public Match recordMatch(Long player1Id, Long player2Id, Long winnerId, Long tournamentId, Match matchData) {
-        Optional<Player> p1 = playerRepository.findById(player1Id);
-        Optional<Player> p2 = playerRepository.findById(player2Id);
-        Optional<Player> win = playerRepository.findById(winnerId);
-        Optional<Tournament> tour = tournamentRepository.findById(tournamentId);
+    public Match recordMatch(MatchRequestDTO dto) {
+        Optional<Player> p1 = playerRepository.findById(dto.getPlayer1Id());
+        Optional<Player> p2 = playerRepository.findById(dto.getPlayer2Id());
+        Optional<Player> win = playerRepository.findById(dto.getWinnerId());
+        Optional<Tournament> tour = tournamentRepository.findById(dto.getTournamentId());
 
         if (p1.isPresent() && p2.isPresent() && win.isPresent() && tour.isPresent()) {
             Tournament tournament = tour.get();
@@ -38,10 +39,11 @@ public class MatchService {
                 match.setPlayer2(p2.get());
                 match.setWinner(win.get());
                 match.setTournament(tournament);
-                match.setMatchDate(matchData.getMatchDate());
-                match.setScore(matchData.getScore());
+                match.setMatchDate(dto.getMatchDate());
+                match.setScore(dto.getScore());
 
-                if (win.get().getId().equals(p1.get().getId())) {
+                // Update stats
+                if (dto.getWinnerId().equals(p1.get().getId())) {
                     p1.get().setWins(p1.get().getWins() + 1);
                     p2.get().setLosses(p2.get().getLosses() + 1);
                 } else {
@@ -60,7 +62,6 @@ public class MatchService {
     }
 
     public Optional<Match> getMatchById(Long id) {
-        System.out.println("Looking for match with ID: " + id);
         return matchRepository.findById(id);
     }
 }

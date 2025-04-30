@@ -15,7 +15,7 @@ public class RankingController {
     private PlayerService playerService;
 
     @GetMapping
-    public List<Player> getRankings() {
+    public List<Player> getPlayerRankings() {
         return playerService.getPlayersSortedByWins();
     }
 }

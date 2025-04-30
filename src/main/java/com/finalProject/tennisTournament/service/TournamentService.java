@@ -1,5 +1,6 @@
 package com.finalProject.tennisTournament.service;
 
+import com.finalProject.tennisTournament.dto.TournamentRequestDTO;
 import com.finalProject.tennisTournament.model.Player;
 import com.finalProject.tennisTournament.model.Tournament;
 import com.finalProject.tennisTournament.repository.PlayerRepository;
@@ -19,25 +20,30 @@ public class TournamentService {
     @Autowired
     private PlayerRepository playerRepository;
 
-    // Create a new tournament
-    public Tournament createTournament(Tournament tournament) {
-        return tournamentRepository.save(tournament);
-    }
-
-    // Get all tournaments
     public List<Tournament> getAllTournaments() {
         return tournamentRepository.findAll();
     }
 
-    // Register a player to a tournament
+    public Optional<Tournament> getTournamentById(Long id) {
+        return tournamentRepository.findById(id);
+    }
+
+    public Tournament createTournament(TournamentRequestDTO dto) {
+        Tournament tournament = new Tournament();
+        tournament.setName(dto.getName());
+        tournament.setLocation(dto.getLocation());
+        tournament.setStartDate(dto.getStartDate());
+        tournament.setEndDate(dto.getEndDate());
+        return tournamentRepository.save(tournament);
+    }
+
     public Tournament registerPlayer(Long tournamentId, Long playerId) {
-        Optional<Tournament> tournamentOpt = tournamentRepository.findById(tournamentId);
+        Optional<Tournament> tourOpt = tournamentRepository.findById(tournamentId);
         Optional<Player> playerOpt = playerRepository.findById(playerId);
 
-        if (tournamentOpt.isPresent() && playerOpt.isPresent()) {
-            Tournament tournament = tournamentOpt.get();
-            Player player = playerOpt.get();
-            tournament.getPlayers().add(player);
+        if (tourOpt.isPresent() && playerOpt.isPresent()) {
+            Tournament tournament = tourOpt.get();
+            tournament.getPlayers().add(playerOpt.get());
             return tournamentRepository.save(tournament);
         }
 

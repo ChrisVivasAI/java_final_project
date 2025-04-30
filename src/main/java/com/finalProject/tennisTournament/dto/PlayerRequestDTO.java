@@ -1,16 +1,10 @@
-package com.finalProject.tennisTournament.model;
+package com.finalProject.tennisTournament.dto;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-@Entity
-public class Player {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class PlayerRequestDTO {
 
     @NotBlank(message = "Name is required")
     private String name;
@@ -27,15 +21,7 @@ public class Player {
     @Min(value = 0, message = "Losses must be a non-negative number")
     private Integer losses;
 
-    // Getters and setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    // Getters and Setters
     public String getName() {
         return name;
     }
